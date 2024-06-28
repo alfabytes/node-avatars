@@ -1,0 +1,12 @@
+CREATE USER avatar WITH PASSWORD 'avatar';
+CREATE DATABASE avatars;
+GRANT ALL PRIVILEGES ON DATABASE avatars TO avatar;
+
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  image_url TEXT NOT NULL
+);
+
+psql -h 13.212.35.18 -U avatar -d avatars
