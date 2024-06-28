@@ -15,6 +15,6 @@ jobs:
         username: ${{ secrets.USER }}
         password: ${{ secrets.PASSWORD }}
         script: |
-          cd ${{ secrets.PATH }}
+          cd /home/cloud_user/node-avatars
           git pull
           pm2 restart ecosystem.config.js 
