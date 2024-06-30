@@ -17,4 +17,5 @@ jobs:
         script: |
           cd /home/cloud_user/node-avatars
           git pull
+          npm install
           pm2 restart ecosystem.config.js 
