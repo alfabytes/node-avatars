@@ -55,14 +55,14 @@ app.post('/register', async (req, res) => {
   const imagePath = `images/${originalImageName}`; // Assuming images are stored in an 'images' folder
 
   try {
-    const { username, email } = req.body;
+    const { username } = req.body;
 
     // Generate a unique name for the image to be saved in S3
     const uniqueImageName = `${username}-${uuidv4()}.png`;
 
     // Initially insert user info into PostgreSQL database without image_url
-    const insertQuery = 'INSERT INTO users(username, email, image_url) VALUES($1, $2, $3) RETURNING *';
-    const values = [username, email, uniqueImageName];
+    const insertQuery = 'INSERT INTO users(username, image_url) VALUES($1, $2, $3) RETURNING *';
+    const values = [username, uniqueImageName];
     const response = await pool.query(insertQuery, values);
 
     // If user is successfully registered, proceed with image upload
@@ -86,7 +86,7 @@ app.post('/register', async (req, res) => {
 // Get all users endpoint
 app.get('/users', async (req, res) => {
   try {
-    const response = await pool.query('SELECT * FROM users');
+    const response = await pool.query('SELECT * FROM users LIMIT 100');
     res.json(response.rows);
   } catch (error) {
     console.error(error);
