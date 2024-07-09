@@ -61,7 +61,7 @@ app.post('/register', async (req, res) => {
     const uniqueImageName = `${username}-${uuidv4()}.png`;
 
     // Initially insert user info into PostgreSQL database without image_url
-    const insertQuery = 'INSERT INTO users(username, image_url) VALUES($1, $2, $3) RETURNING *';
+    const insertQuery = 'INSERT INTO users(username, image_url) VALUES($1, $2) RETURNING *';
     const values = [username, uniqueImageName];
     const response = await pool.query(insertQuery, values);
 
@@ -88,6 +88,23 @@ app.get('/users', async (req, res) => {
   try {
     const response = await pool.query('SELECT * FROM users LIMIT 100');
     res.json(response.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
+});
+
+// Get user by username
+app.get('/users/:username', async (req, res) => {
+  try {
+    const { username } = req.params;
+    const response = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+
+    if (response.rows.length > 0) {
+      res.json(response.rows[0]);
+    } else {
+      res.status(404).send('User not found');
+    }
   } catch (error) {
     console.error(error);
     res.status(500).send('Server error');
