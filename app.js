@@ -98,7 +98,7 @@ app.get('/users', async (req, res) => {
 app.get('/users/:username', async (req, res) => {
   try {
     const { username } = req.params;
-    const response = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+    const response = await pool.query('SELECT * FROM users WHERE username = $1 LIMIT 1', [username]);
 
     if (response.rows.length > 0) {
       res.json(response.rows[0]);
